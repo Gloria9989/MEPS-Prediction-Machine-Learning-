@@ -67,7 +67,7 @@ total2 <- total %>% select(-TOTEXP21)
 
 ------------------------------------------------------------------
 #data cleansing: data with "Don't know" or "Refused" or "Inapplicable" would be treated as missing
-# 7018 records remain after data cleansing
+# 2780 records remain after data cleansing
 
 ------------------------------------------------------------------
 #descriptive analysis
