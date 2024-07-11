@@ -119,6 +119,8 @@ plot_glmnet(fit_ridge)
 
 # use 5 predictors to predict health expenditure and evaluate:
 #OBTOTV20, IPDIS20, FAMINC20, INSURC20, PMEDPY42
+------------------------------------------------------------------------------------------------------------------------------
+# Use continuous outcome 
 #linear model
 fit_lr <- lm(exp2 ~OBTOTV20+IPDIS20+FAMINC20+INSURC20+PMEDPY42, data = train)
 summary_model<-summary(rf_model)
@@ -159,14 +161,14 @@ prediction <- predict(svr_model, test)
 mse <- mean((prediction - test$exp2)^2)
 sqrt(mse) 
 
-###Neural Networks
+###Neural Networks 
 library(neuralnet)
 nn_model <- neuralnet(exp2~OBTOTV20+IPDIS20+FAMINC20+INSURC20+PMEDPY42, data = train, hidden = c(5, 3)) 
 prediction <- predict(nn_model, test)
 mse <- mean((prediction - test$exp2)^2)
+##accuracy not as good as others
 
-
-------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------
 ##binary classification: the health expenditure is classified as high (>median) and low (<=median)
 # 1 is high, >667.5, 0 is low,<=667.5
 total$exp_class<-ifelse(total$TOTEXP21>667.5 , 1, 0)
@@ -176,7 +178,7 @@ total2 <- total %>% select(-TOTEXP21)
 #HISPANX, FAMINC20, BPMLDX, CHOLAGED, ARTHDX,
 #OBTOTV20, DVTOT20, IPDIS20, OPTOTV20, ERTOT20, INSURC20, PMEDPY42
 
-#logistic
+#logistic regression
 model <- glm(exp_class ~ HISPANX+ FAMINC20+ BPMLDX + CHOLAGED + ARTHDX+
              OBTOTV20+ DVTOT20+ IPDIS20+ OPTOTV20+ ERTOT20+ INSURC20+ PMEDPY42,
              data = train, family = binomial)
@@ -246,16 +248,6 @@ svr_model <- svm(exp_class~HISPANX+ FAMINC20+ BPMLDX + CHOLAGED + ARTHDX+
                    OBTOTV20+ DVTOT20+ IPDIS20+ OPTOTV20+ ERTOT20+ INSURC20+ PMEDPY42,
                  data = train, kernel = "radial")
 prediction <- predict(svr_model, test)
-predicted_class <- ifelse(prediction >= 0.5, 1, 0) 
-mean(predicted_class == test$exp_class)
-
-
-###Neural Networks
-library(neuralnet)
-nn_model <- neuralnet(exp_class~HISPANX+ FAMINC20+ BPMLDX + CHOLAGED + ARTHDX+
-                        OBTOTV20+ DVTOT20+ IPDIS20+ OPTOTV20+ ERTOT20+ INSURC20+ PMEDPY42,
-                      data = train, hidden = c(5, 3)) 
-prediction <- predict(nn_model, test)
 predicted_class <- ifelse(prediction >= 0.5, 1, 0) 
 mean(predicted_class == test$exp_class)
 
